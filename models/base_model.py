@@ -1,21 +1,35 @@
 #!/usr/bin/env pyhton3
 
 """ this is the base for all my models"""
-
+from pprint import pprint
 from uuid import uuid4
 from datetime import datetime
+from models import storage
+
 class BaseModel:
     """ this is the base class for all my classes"""
-    def __init__(self):
-        self.id = str(uuid4())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
-    
+    def __init__(self, *args, **kwargs):
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "created_at" or key == "updated_at":
+                    setattr(self, key, datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f"))
+                elif key == "__class__":
+                    pass
+                else:
+                    setattr(self, key, value)
+            
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+            storage.new(self)
+
     def __str__(self):
         return f"[{__class__.__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         self.updated_at = datetime.now()
+        storage.save()
 
     def to_dict(self):
         dict = {}
@@ -28,16 +42,3 @@ class BaseModel:
                 dict[key] = value
         dict["__class__"] = __class__.__name__
         return dict
-
-if __name__ == "__main__":
-    my_model = BaseModel()
-    my_model.name = "My First Model"
-    my_model.my_number = 89
-    print(my_model)
-    my_model.save()
-    print(my_model)
-    my_model_json = my_model.to_dict()
-    print(my_model_json)
-    print("JSON of my_model:")
-    for key in my_model_json.keys():
-        print("\t{}: ({}) - {}".format(key, type(my_model_json[key]), my_model_json[key]))
