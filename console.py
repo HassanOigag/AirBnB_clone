@@ -6,6 +6,24 @@ import os
 from models.base_model import BaseModel
 from models.engine.file_storage import FileStorage
 from models import storage
+from pprint import pprint
+# def my_split(str):
+#     tokens = []
+#     for i in range(len(str)):
+#         word = ""
+#         if (str[i] != ' ')
+
+
+def cast(str):
+    if str.isdigit():
+        return int(str)
+    else:
+        try:
+            res = float(str)
+            return res
+        except:
+            return str
+
 
 class HBNBCommand(cmd.Cmd):
     """Simple airbnb console."""
@@ -41,9 +59,10 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
-            print("** instance id missing **")
-        elif args[0] not in self.classes:
-            print("** class doesn't exist **")
+            if args[0] not in self.classes:
+                print("** class doesn't exist **")
+            else:
+                print("** instance id missing **")
         else:
             id = f"{args[0]}.{args[1]}"
             instance_dict = storage.all().get(id)
@@ -59,9 +78,10 @@ class HBNBCommand(cmd.Cmd):
         if len(args) == 0:
             print("** class name missing **")
         elif len(args) == 1:
-            print("** instance id missing **")
-        elif args[0] not in self.classes:
-            print("** class doesn't exist **")
+            if args[0] not in self.classes:
+                print("** class doesn't exist **")
+            else:
+                print("** instance id missing **")
         else:
             all_objs = storage.all()
             id = f"{args[0]}.{args[1]}"
@@ -73,6 +93,7 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
 
     def do_all(self, line):
+        """Prints all string representation of all instances based or not on the class name"""
         objs_list = []
         if line not in self.classes:
             print("** class doesn't exist **")
@@ -84,7 +105,38 @@ class HBNBCommand(cmd.Cmd):
             print(objs_list)
 
     def do_update(self, line):
-        pass
+        """Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file)."""
+        error = 0
+        args = line.split()
+        if len(args) == 0:
+            print("** class name missing **")
+            error = 1
+        elif len(args) == 1:
+            if args[0] not in self.classes:
+                print("** class doesn't exist **")
+                error = 1
+            else:
+                print("** instance id missing **")
+                error = 1
+        else:
+            all_objs = storage.all()
+            id = f"{args[0]}.{args[1]}"
+            instance_dict = all_objs.get(id)
+            if not instance_dict:
+                print("** no instance found **")
+                error = 1
+        if error:
+            return
+        if len(args) == 2:
+            print("** attribute name missing **")
+        elif len(args) == 3:
+            print("** value missing **")
+        else:
+            attr_name = args[2]
+            attr_value = args[3]
+            instance_dict[attr_name] = cast(attr_value)
+            obj = BaseModel(**instance_dict)
+            obj.save()
 
     def emptyline(self):
         """if no command entered it displays a new prompt"""
