@@ -3,15 +3,16 @@
 import json
 
 class FileStorage():
-    __file_path = "storage.json"
+    __file_path = "file.json"
     __objects = {}
 
     def all(self):
         return self.__objects
     
     def new(self, obj):
-        key = f"{obj['__class__']}.{obj['id']}"
-        self.__objects[key] = obj
+        obj_dict = obj.to_dict()
+        key = f"{obj_dict['__class__']}.{obj_dict['id']}"
+        self.__objects[key] = obj_dict
     
     def save(self):
         objects_str = json.dumps(self.__objects)
