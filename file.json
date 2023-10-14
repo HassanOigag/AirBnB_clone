@@ -1,30 +1,16 @@
 {
-    "BaseModel.1140ee53-3cc0-4a34-8a97-ef602d3943c6": {
-        "id": "1140ee53-3cc0-4a34-8a97-ef602d3943c6",
-        "created_at": "2023-10-13T10:22:29.678122",
-        "updated_at": "2023-10-13T10:22:29.678126",
-        "__class__": "BaseModel",
-        "user": "hassan",
-        "age": 24,
-        "height": 1.86,
-        "country": "morocco"
+    "User.7d4cd952-4289-4251-9a07-a9094050606d": {
+        "id": "7d4cd952-4289-4251-9a07-a9094050606d",
+        "created_at": "2023-10-14T15:37:48.820301",
+        "updated_at": "2023-10-14T15:37:48.820343",
+        "__class__": "User",
+        "first_name": "hassan"
     },
-    "BaseModel.99c347e6-afbd-4282-b70a-84c400384fe4": {
-        "id": "99c347e6-afbd-4282-b70a-84c400384fe4",
-        "created_at": "2023-10-13T10:23:05.469377",
-        "updated_at": "2023-10-13T10:23:05.469381",
-        "__class__": "BaseModel"
-    },
-    "BaseModel.1626e3fc-64d3-460a-a898-2a3c0f0d959d": {
-        "id": "1626e3fc-64d3-460a-a898-2a3c0f0d959d",
-        "created_at": "2023-10-13T10:25:35.106322",
-        "updated_at": "2023-10-13T10:25:35.106330",
-        "__class__": "BaseModel"
-    },
-    "BaseModel.6adeed39-6081-4354-8a2e-091bf6ca391c": {
-        "id": "6adeed39-6081-4354-8a2e-091bf6ca391c",
-        "created_at": "2023-10-13T13:19:57.310599",
-        "updated_at": "2023-10-13T13:19:57.310608",
+    "BaseModel.7d4cd952-4289-4251-9a07-a9094050606d": {
+        "id": "7d4cd952-4289-4251-9a07-a9094050606d",
+        "created_at": "2023-10-14T15:37:48.820301",
+        "updated_at": "2023-10-14T15:38:52.709474",
+        "first_name": "hassan",
         "__class__": "BaseModel"
     }
 }

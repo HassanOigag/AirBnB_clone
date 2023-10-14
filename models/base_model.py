@@ -25,10 +25,11 @@ class BaseModel:
             storage.new(self)
 
     def __str__(self):
-        return f"[{__class__.__name__}] ({self.id}) {self.__dict__}"
+        return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
     def save(self):
         self.updated_at = datetime.now()
+        storage.new(self)
         storage.save()
 
     def to_dict(self):
@@ -40,5 +41,5 @@ class BaseModel:
                 dict[key] = self.updated_at.isoformat()
             else:
                 dict[key] = value
-        dict["__class__"] = __class__.__name__
+        dict["__class__"] = type(self).__name__
         return dict

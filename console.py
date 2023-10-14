@@ -4,6 +4,7 @@
 import cmd
 import os
 from models.base_model import BaseModel
+from models.user import User
 from models.engine.file_storage import FileStorage
 from models import storage
 from pprint import pprint
@@ -28,7 +29,7 @@ def cast(str):
 class HBNBCommand(cmd.Cmd):
     """Simple airbnb console."""
     prompt = "(hbnb) "
-    classes = ["BaseModel"]
+    classes = ["BaseModel", "User"]
 
     def do_EOF(self, line):
         """EOF command quits the programm"""
@@ -49,7 +50,10 @@ class HBNBCommand(cmd.Cmd):
         elif line not in self.classes:
             print("** class doesn't exist **")
         else:
-            new = BaseModel()
+            if (line == "BaseModel"):
+                new = BaseModel()
+            elif line == "User":
+                new = User()
             new.save()
             print(new.id)
 
@@ -69,7 +73,10 @@ class HBNBCommand(cmd.Cmd):
             if not instance_dict:
                 print("** no instance found **")
             else:
-                obj = BaseModel(**instance_dict)
+                if instance_dict["__class__"] == "BaseModel":
+                    obj = BaseModel(**instance_dict)
+                else:
+                    obj = User(**instance_dict)
                 print(obj)
     
     def do_destroy(self, line):
@@ -144,15 +151,3 @@ class HBNBCommand(cmd.Cmd):
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
-    # all_objs = storage.all()
-    # print("-- Reloaded objects --")
-    # for obj_id in all_objs.keys():
-    #     obj = all_objs[obj_id]
-    #     print(obj)
-
-    # print("-- Create a new object --")
-    # my_model = BaseModel()
-    # my_model.name = "My_First_Model"
-    # my_model.my_number = 89
-    # my_model.save()
-    # print(my_model)

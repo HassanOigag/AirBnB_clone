@@ -16,13 +16,13 @@ class FileStorage():
     
     def save(self):
         objects_str = json.dumps(self.__objects)
-        with open(self.__file_path, "w") as storage:
-            storage.write(objects_str)
+        with open(self.__file_path, "w") as f:
+            f.write(objects_str)
     
     def reload(self):
         try:
-            with open(self.__file_path, "r") as storage:
-                objects_str = storage.read()
+            with open(self.__file_path, "r") as f:
+                objects_str = f.read()
             self.__objects = json.loads(objects_str)
         except:
             pass
