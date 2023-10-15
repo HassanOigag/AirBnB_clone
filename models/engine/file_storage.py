@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
+
 """ the file storage class """
+
 import json
 
+
 class FileStorage():
+    """the FileStorate class that stores our data"""
     __file_path = "file.json"
     __objects = {}
 
     def all(self):
+        """returns all the stored objects"""
         return self.__objects
-    
+
     def new(self, obj):
+        """save the new object in the objects dict"""
         obj_dict = obj.to_dict()
         if type(obj).__name__ == "User":
             obj_dict["first_name"] = ""
@@ -23,7 +29,7 @@ class FileStorage():
             obj_dict["state_id"] = ""
         elif type(obj).__name__ == "Amenity":
             obj_dict["name"] = ""
-        elif type(obj).__name__ == "City":
+        elif type(obj).__name__ == "Place":
             obj_dict["name"] = ""
             obj_dict["user_id"] = ""
             obj_dict["city_id"] = ""
@@ -41,17 +47,18 @@ class FileStorage():
             obj_dict["text"] = ""
         key = f"{obj_dict['__class__']}.{obj_dict['id']}"
         self.__objects[key] = obj_dict
-    
+
     def save(self):
+        """save the objects dict to the json file"""
         objects_str = json.dumps(self.__objects)
         with open(self.__file_path, "w") as f:
             f.write(objects_str)
-    
+
     def reload(self):
+        """reads from the json file and stores it in object dict"""
         try:
             with open(self.__file_path, "r") as f:
                 objects_str = f.read()
             self.__objects = json.loads(objects_str)
-        except:
+        except FileNotFoundError:
             pass
-

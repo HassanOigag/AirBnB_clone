@@ -13,28 +13,25 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from pprint import pprint
-# def my_split(str):
-#     tokens = []
-#     for i in range(len(str)):
-#         word = ""
-#         if (str[i] != ' ')
 
 
 def cast(str):
+    """catsts the input string to the its actual data type"""
     if str.isdigit():
         return int(str)
     else:
         try:
             res = float(str)
             return res
-        except:
+        except ValueError:
             return str
 
 
 class HBNBCommand(cmd.Cmd):
     """Simple airbnb console."""
     prompt = "(hbnb) "
-    classes = ["BaseModel", "User", "Place", "State", "City", "Amenity", "Review"]
+    classes = ["BaseModel", "User", "Place",
+               "State", "City", "Amenity", "Review"]
 
     def do_EOF(self, line):
         """EOF command quits the programm"""
@@ -47,33 +44,23 @@ class HBNBCommand(cmd.Cmd):
     def do_clear(self, line):
         """clears the console"""
         os.system("clear")
-    
+
     def do_create(self, line):
-        """Creates a new instance of BaseModel, saves it (to the JSON file) and prints the id"""
+        """Creates a new instance
+        of BaseModel, saves it (to the JSON file) and prints the id"""
         if not line:
             print("** class name missing **")
         elif line not in self.classes:
             print("** class doesn't exist **")
         else:
-            if (line == "BaseModel"):
-                new = BaseModel()
-            elif line == "User":
-                new = User()
-            elif line == "City":
-                new = City()
-            elif line == "Review":
-                new = Review()
-            elif line == "State":
-                new = State()
-            elif line == "Place":
-                new = Place()
-            elif line == "Amenity":
-                new = Amenity()
+            class_name = globals()[line]
+            new = class_name()
             new.save()
             print(new.id)
 
     def do_show(self, line):
-        """Prints the string representation of an instance based on the class name and id"""
+        """Prints the string representation of
+        an instance based on the class name and id"""
         args = line.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -91,24 +78,13 @@ class HBNBCommand(cmd.Cmd):
             if not instance_dict:
                 print("** no instance found **")
             else:
-                if args[0] == "BaseModel":
-                    obj = BaseModel(**instance_dict)
-                elif args[0] == "User":
-                    obj = User(**instance_dict)
-                elif args[0] == "City":
-                    obj = City(**instance_dict)
-                elif args[0] == "State":
-                    obj = State(**instance_dict)
-                elif args[0] == "Amenity":
-                    obj = Amenity(**instance_dict)
-                elif args[0] == "Review":
-                    obj = Review(**instance_dict)
-                elif args[0] == "Place":
-                    obj = Place(**instance_dict)
+                class_name = globals()[args[0]]
+                obj = class_name(**instance_dict)
                 print(obj)
-    
+
     def do_destroy(self, line):
-        """Deletes an instance based on the class name and id (save the change into the JSON file)"""
+        """Deletes an instance based on
+        the class name and id (save the change into the JSON file)"""
         args = line.split()
         if len(args) == 0:
             print("** class name missing **")
@@ -128,27 +104,24 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
 
     def do_all(self, line):
-        """Prints all string representation of all instances based or not on the class name"""
-        base_model_list = []
-        users_list = []
+        """Prints all string
+        representation of all instances based or not on the class name"""
+        instances = []
         if line not in self.classes:
             print("** class doesn't exist **")
         else:
             all_objects = storage.all()
             for value in all_objects.values():
-                if value["__class__"] == "BaseModel":
-                    obj = BaseModel(**value)
-                    base_model_list.append(obj.__str__())
-                else:
-                    obj = User(**value)
-                    users_list.append(obj.__str__())
-            if line == "User":
-                print(users_list)
-            else:
-                print(base_model_list)
+                if value["__class__"] == line:
+                    class_name = globals()[line]
+                    obj = class_name(**value)
+                    instances.append(obj.__str__())
+            print(instances)
 
     def do_update(self, line):
-        """Updates an instance based on the class name and id by adding or updating attribute (save the change into the JSON file)."""
+        """Updates an instance based on the class name and id by
+        adding or updating attribute (save the change into
+        the JSON file)."""
         error = 0
         args = line.split()
         if len(args) == 0:
@@ -178,15 +151,15 @@ class HBNBCommand(cmd.Cmd):
             attr_name = args[2]
             attr_value = args[3]
             instance_dict[attr_name] = cast(attr_value)
-            if instance_dict.get("__class__") == "BaseModel":
-                obj = BaseModel(**instance_dict)
-            else:
-                obj = User(**instance_dict)
+            class_name = globals()[args[0]]
+            obj = class_name(**instance_dict)
             obj.save()
 
     def emptyline(self):
         """if no command entered it displays a new prompt"""
         pass
 
+
 if __name__ == "__main__":
+    """this is the main"""
     HBNBCommand().cmdloop()

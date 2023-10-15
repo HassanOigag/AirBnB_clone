@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
+
 """the place model"""
+
 from models.base_model import BaseModel
 
+
 class Place(BaseModel):
+    """the Place Class that inherits from BaseModel"""
+
     city_id = ""
     user_id = ""
     name = ""
