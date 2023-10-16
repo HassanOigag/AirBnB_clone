@@ -24,36 +24,9 @@ class FileStorage():
 
     def new(self, obj):
         """save the new object in the objects dict"""
-        if type(obj).__name__ == "User":
-            obj.first_name = ""
-            obj.last_name = ""
-            obj.email = ""
-            obj.password = ""
-        elif type(obj).__name__ == "State":
-            obj.name = ""
-        elif type(obj).__name__ == "City":
-            obj.name = ""
-            obj.state_id = ""
-        elif type(obj).__name__ == "Amenity":
-            obj.name = ""
-        elif type(obj).__name__ == "Place":
-            obj.name = ""
-            obj.user_id = ""
-            obj.city_id = ""
-            obj.description = ""
-            obj.number_rooms = 0
-            obj.number_bathrooms = 0
-            obj.max_guest = 0
-            obj.price_by_night = 0
-            obj.latitude = 0.0
-            obj.longitude = 0.0
-            obj.amenity_ids = []
-        elif type(obj).__name__ == "Review":
-            obj.place_id = ""
-            obj.user_id = ""
-            obj.text = ""
-        key = f"{type(obj).__name__}.{obj.id}"
-        self.__objects[key] = obj
+        if obj:
+            key = f"{type(obj).__name__}.{obj.id}"
+            self.__objects[key] = obj
 
     def save(self):
         """save the objects dict to the json file"""
