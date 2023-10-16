@@ -138,6 +138,9 @@ class HBNBCommand(cmd.Cmd):
                 print("** instance id missing **")
                 error = 1
         else:
+            if args[0] not in self.classes:
+                print("** class doesn't exist **")
+                return
             all_objs = storage.all()
             id = f"{args[0]}.{args[1]}"
             instance = all_objs.get(id)
