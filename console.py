@@ -169,15 +169,17 @@ class HBNBCommand(cmd.Cmd):
             if class_name not in self.classes:
                 print("** class doesn't exist **")
                 return
-            if args[1] != "count()":
+            if args[1] == "count()":
+                counter = 0
+                all_objects = storage.all()
+                for obj in all_objects.values():
+                    if type(obj).__name__ == class_name:
+                        counter += 1
+                print(counter)
+            elif args[1] == "all()":
+                self.do_all(class_name)
+            else:
                 print(syntax_error)
-                return
-            counter = 0
-            all_objects = storage.all()
-            for obj in all_objects.values():
-                if type(obj).__name__ == class_name:
-                    counter += 1
-            print(counter)
 
     def emptyline(self):
         """if no command entered it displays a new prompt"""
