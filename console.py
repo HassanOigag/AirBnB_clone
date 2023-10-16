@@ -179,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
             elif args[1] == "all()":
                 self.do_all(class_name)
             elif args[1][:5] == "show(" and args[1][-1] == ")":
-                id = args[1][5:-1]
+                id = args[1][5:-1].strip("\"'")
                 self.do_show(f"{class_name} {id}")
             else:
                 print(syntax_error)
