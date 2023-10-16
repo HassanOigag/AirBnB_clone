@@ -92,6 +92,9 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print("** instance id missing **")
         else:
+            if args[0] not in self.classes:
+                print("** class doesn't exist **")
+                return
             all_objs = storage.all()
             id = f"{args[0]}.{args[1]}"
             instance_dict = all_objs.get(id)
@@ -105,14 +108,18 @@ class HBNBCommand(cmd.Cmd):
         """Prints all string
         representation of all instances based or not on the class name"""
         instances = []
-        if line not in self.classes:
+        all_objects = storage.all()
+        if not line:
+            for obj in all_objects.values():
+                instances.append(obj.__str__())
+        elif line and line not in self.classes:
             print("** class doesn't exist **")
+            return
         else:
-            all_objects = storage.all()
             for obj in all_objects.values():
                 if type(obj).__name__ == line:
                     instances.append(obj.__str__())
-            print(instances)
+        print(instances)
 
     def do_update(self, line):
         """Updates an instance based on the class name and id by
