@@ -13,7 +13,7 @@ from ..place import Place
 from ..review import Review
 
 
-class FileStorage():
+class FileStorage:
     """the FileStorate class that stores our data"""
     __file_path = "file.json"
     __objects = {}
@@ -47,5 +47,5 @@ class FileStorage():
                 for key, value in json_content.items():
                     class_name = globals()[value.get("__class__")]
                     self.__objects[key] = class_name(**value)
-        except FileNotFoundError:
+        except (FileNotFoundError, FileExistsError):
             pass
