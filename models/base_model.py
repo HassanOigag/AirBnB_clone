@@ -31,6 +31,12 @@ class BaseModel:
         """returns the string repr of the object"""
         return f"[{type(self).__name__}] ({self.id}) {self.__dict__}"
 
+    def __repr__(self):
+        """
+        returns string repr
+        """
+        return (self.__str__())
+
     def save(self):
         """saves the object to the json filee"""
         self.updated_at = datetime.now()

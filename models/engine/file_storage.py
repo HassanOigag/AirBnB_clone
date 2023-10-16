@@ -39,7 +39,6 @@ class FileStorage():
 
     def reload(self):
         """reads from the json file and stores it in object dict"""
-        dict_of_objects = {}
         try:
             with open(self.__file_path, "r") as f:
                 objects_str = f.read()
@@ -47,7 +46,6 @@ class FileStorage():
                 json_content = json.loads(objects_str)
                 for key, value in json_content.items():
                     class_name = globals()[value.get("__class__")]
-                    dict_of_objects[key] = class_name(**value)
-            self.__objects = dict_of_objects
+                    self.__objects[key] = class_name(**value)
         except FileNotFoundError:
             pass
