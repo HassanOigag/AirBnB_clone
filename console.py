@@ -181,6 +181,9 @@ class HBNBCommand(cmd.Cmd):
             elif args[1][:5] == "show(" and args[1][-1] == ")":
                 id = args[1][5:-1].strip("\"'")
                 self.do_show(f"{class_name} {id}")
+            elif args[1][:8] == "destroy(" and args[1][-1] == ")":
+                id = args[1][8:-1].strip("\"'")
+                self.do_destroy(f"{class_name} {id}")
             else:
                 print(syntax_error)
 
