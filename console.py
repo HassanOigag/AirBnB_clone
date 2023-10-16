@@ -159,6 +159,26 @@ class HBNBCommand(cmd.Cmd):
             setattr(instance, attr_name, cast(attr_value))
             instance.save()
 
+    def default(self, line):
+        syntax_error = f"*** Unknown syntax: {line}"
+        args = line.split(".")
+        if len(args) == 1:
+            print(syntax_error)
+        else:
+            class_name = args[0]
+            if class_name not in self.classes:
+                print("** class doesn't exist **")
+                return
+            if args[1] != "count()":
+                print(syntax_error)
+                return
+            counter = 0
+            all_objects = storage.all()
+            for obj in all_objects.values():
+                if type(obj).__name__ == class_name:
+                    counter += 1
+            print(counter)
+
     def emptyline(self):
         """if no command entered it displays a new prompt"""
         pass
