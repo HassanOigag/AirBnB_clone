@@ -2,7 +2,15 @@
 
 """ the file storage class """
 
+
 import json
+from ..base_model import BaseModel
+from ..amenity import Amenity
+from ..user import User
+from ..city import City
+from ..state import State
+from ..place import Place
+from ..review import Review
 
 
 class FileStorage():
@@ -16,49 +24,57 @@ class FileStorage():
 
     def new(self, obj):
         """save the new object in the objects dict"""
-        obj_dict = obj.to_dict()
         if type(obj).__name__ == "User":
-            obj_dict["first_name"] = ""
-            obj_dict["last_name"] = ""
-            obj_dict["email"] = ""
-            obj_dict["password"] = ""
+            obj.first_name = ""
+            obj.last_name = ""
+            obj.email = ""
+            obj.password = ""
         elif type(obj).__name__ == "State":
-            obj_dict["name"] = ""
+            obj.name = ""
         elif type(obj).__name__ == "City":
-            obj_dict["name"] = ""
-            obj_dict["state_id"] = ""
+            obj.name = ""
+            obj.state_id = ""
         elif type(obj).__name__ == "Amenity":
-            obj_dict["name"] = ""
+            obj.name = ""
         elif type(obj).__name__ == "Place":
-            obj_dict["name"] = ""
-            obj_dict["user_id"] = ""
-            obj_dict["city_id"] = ""
-            obj_dict["description"] = ""
-            obj_dict["number_rooms"] = 0
-            obj_dict["number_bathrooms"] = 0
-            obj_dict["max_guest"] = 0
-            obj_dict["price_by_night"] = 0
-            obj_dict["latitude"] = 0.0
-            obj_dict["longitude"] = 0.0
-            obj_dict["amenity_ids"] = []
+            obj.name = ""
+            obj.user_id = ""
+            obj.city_id = ""
+            obj.description = ""
+            obj.number_rooms = 0
+            obj.number_bathrooms = 0
+            obj.max_guest = 0
+            obj.price_by_night = 0
+            obj.latitude = 0.0
+            obj.longitude = 0.0
+            obj.amenity_ids = []
         elif type(obj).__name__ == "Review":
-            obj_dict["place_id"] = ""
-            obj_dict["user_id"] = ""
-            obj_dict["text"] = ""
-        key = f"{obj_dict['__class__']}.{obj_dict['id']}"
-        self.__objects[key] = obj_dict
+            obj.place_id = ""
+            obj.user_id = ""
+            obj.text = ""
+        key = f"{type(obj).__name__}.{obj.id}"
+        self.__objects[key] = obj
 
     def save(self):
         """save the objects dict to the json file"""
-        objects_str = json.dumps(self.__objects)
+        dict_of_objects = {}
+        for key, value in self.__objects.items():
+            dict_of_objects[key] = value.to_dict()
+        objects_str = json.dumps(dict_of_objects)
         with open(self.__file_path, "w") as f:
             f.write(objects_str)
 
     def reload(self):
         """reads from the json file and stores it in object dict"""
+        dict_of_objects = {}
         try:
             with open(self.__file_path, "r") as f:
                 objects_str = f.read()
-            self.__objects = json.loads(objects_str)
+            if (objects_str):
+                json_content = json.loads(objects_str)
+                for key, value in json_content.items():
+                    class_name = globals()[value.get("__class__")]
+                    dict_of_objects[key] = class_name(**value)
+            self.__objects = dict_of_objects
         except FileNotFoundError:
             pass

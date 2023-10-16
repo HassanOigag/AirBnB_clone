@@ -74,13 +74,11 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             id = f"{args[0]}.{args[1]}"
-            instance_dict = storage.all().get(id)
-            if not instance_dict:
+            instance_obj = storage.all().get(id)
+            if not instance_obj:
                 print("** no instance found **")
             else:
-                class_name = globals()[args[0]]
-                obj = class_name(**instance_dict)
-                print(obj)
+                print(instance_obj)
 
     def do_destroy(self, line):
         """Deletes an instance based on
@@ -111,10 +109,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class doesn't exist **")
         else:
             all_objects = storage.all()
-            for value in all_objects.values():
-                if value["__class__"] == line:
-                    class_name = globals()[line]
-                    obj = class_name(**value)
+            for obj in all_objects.values():
+                if type(obj).__name__ == line:
                     instances.append(obj.__str__())
             print(instances)
 
@@ -137,8 +133,8 @@ class HBNBCommand(cmd.Cmd):
         else:
             all_objs = storage.all()
             id = f"{args[0]}.{args[1]}"
-            instance_dict = all_objs.get(id)
-            if not instance_dict:
+            instance = all_objs.get(id)
+            if not instance:
                 print("** no instance found **")
                 error = 1
         if error:
@@ -150,10 +146,8 @@ class HBNBCommand(cmd.Cmd):
         else:
             attr_name = args[2]
             attr_value = args[3]
-            instance_dict[attr_name] = cast(attr_value)
-            class_name = globals()[args[0]]
-            obj = class_name(**instance_dict)
-            obj.save()
+            setattr(instance, attr_name, cast(attr_value))
+            instance.save()
 
     def emptyline(self):
         """if no command entered it displays a new prompt"""
